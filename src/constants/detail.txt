@@ -1,0 +1,1 @@
+all constant value like image path and all should be in this folder
