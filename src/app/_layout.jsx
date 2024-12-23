@@ -21,7 +21,7 @@ console.log('font', getFonts.CinzeRegular)
   return (
     <AppProvider>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
         style={{ flex: 1, backgroundColor: Colors.moodyBlack }}
       >
