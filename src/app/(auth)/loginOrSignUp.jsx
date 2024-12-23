@@ -7,6 +7,8 @@ import KshirsaButton from '../../small-components/KshirsaButton'
 import KshirsaInput from '../../small-components/KshirsaInput'
 import { STANDARD_EMAIL_REGEX } from '../../constants/utils'
 import { EMPTY_EMAIL, INVALID_FORMAT_EMAIL } from '../../constants/validationMessage'
+import { router } from 'expo-router'
+import apiRoutes from '../../constants/apiRoutes'
 
 const LoginOrSignUp = () => {
   const [email, setEmail] = useState({
@@ -35,25 +37,26 @@ const LoginOrSignUp = () => {
   }
 
   const handleNextClick = () => {
-    if(email.value === '') {
-      setEmail({
-        ...email.value,
-        isValid: false,
-        errorMessage: EMPTY_EMAIL
-      }) 
-    } else if(!email.isValid && email.value !== '') {
-      setEmail({
-        ...email.value,
-        isValid: false,
-        errorMessage: INVALID_FORMAT_EMAIL
-      })
-    } else {
-      setEmail({
-        ...email.value,
-        isValid: true,
-        errorMessage: ''
-      })
-    }
+    // if(email.value === '') {
+    //   setEmail({
+    //     ...email.value,
+    //     isValid: false,
+    //     errorMessage: EMPTY_EMAIL
+    //   }) 
+    // } else if(!email.isValid && email.value !== '') {
+    //   setEmail({
+    //     ...email.value,
+    //     isValid: false,
+    //     errorMessage: INVALID_FORMAT_EMAIL
+    //   })
+    // } else {
+    //   setEmail({
+    //     ...email.value,
+    //     isValid: true,
+    //     errorMessage: ''
+    //   })
+      router.navigate(apiRoutes.otp)
+    // }
   }
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -69,6 +72,7 @@ const LoginOrSignUp = () => {
      needSuccessSymbol={true}
      isValid={email.isValid}
      errorMessage={email.errorMessage}
+     type='email'
      />
     </View>
     <View style={loginOrSignupStyles.buttonWrapper}>
