@@ -4,6 +4,7 @@ import FontLoader from "../constants/fonts";
 import Colors from "../styles/Colors";
 import { AlertNotificationRoot } from 'react-native-alert-notification';
 import { StatusBar } from "expo-status-bar";
+import { KeyboardAvoidingView, Platform } from "react-native";
 
 
 const AppProvider = ({ children }) => (
@@ -16,3 +17,5 @@ const AppProvider = ({ children }) => (
   );
 
   export default AppProvider;
+
+  

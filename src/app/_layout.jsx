@@ -20,16 +20,10 @@ export default function RootLayout() {
 console.log('font', getFonts.CinzeRegular)
   return (
     <AppProvider>
-      <KeyboardAvoidingView
-        // behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-        style={{ flex: 1, backgroundColor: Colors.moodyBlack }}
-      >
         <Stack screenOptions={{ headerShown: false }}>
           <StatusBar backgroundColor={Colors.moodyBlack} />
           <Redirect to={isLogin ? '/(main)' : '/(auth)'} />
         </Stack>
-      </KeyboardAvoidingView>
     </AppProvider>
   );
 };
