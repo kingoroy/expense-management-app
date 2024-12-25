@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "expense-management-app",
-    "slug": "expense-management-app",
-    "version": "1.0.0",
+    "name": "KshirsaMoney",
+    "slug": "KshirsaMoney",
+    "version": "0.1-beta",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",

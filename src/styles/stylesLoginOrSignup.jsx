@@ -10,6 +10,7 @@ export default loginOrSignupStyles = StyleSheet.create({
         paddingTop: 160,
         paddingBottom: 40,
         paddingHorizontal: 40,
+        gap:80
     },
     container: {
         alignItems: 'center',
@@ -34,6 +35,6 @@ export default loginOrSignupStyles = StyleSheet.create({
     buttonWrapper: {
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 20,
+        gap: 20
     }
 })
