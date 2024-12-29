@@ -24,16 +24,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
-        }
-      ]
+      "expo-router"
     ],
     "experiments": {
       "typedRoutes": true
@@ -45,6 +36,6 @@
       "eas": {
         "projectId": "1354d364-b491-4fc3-af97-97ba20db54c3"
       }
-    }
+    } 
   }
 }
