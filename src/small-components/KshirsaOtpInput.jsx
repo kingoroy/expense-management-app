@@ -8,9 +8,7 @@ const KshirsaOtpInput = ({ numberOfDigits = 4, onOTPComplete }) => {
   const inputs = useRef([]);
 
   useEffect(() => {
-    console.log('mount')
     return () => {
-      console.log('remove')
       setOtp('');
     }
   }, [])

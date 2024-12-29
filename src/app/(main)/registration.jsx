@@ -203,7 +203,6 @@ const RegisterForm = () => {
                   visible={true}
                   onClose={() => setVisibleCountryPicker(false)}
                   onSelect={(country) => {
-                    console.log(country)
                     setSelectedCountry(country.name)
                     setSelectedCountryCode(` +${country.callingCode[0]} `)
                   }}

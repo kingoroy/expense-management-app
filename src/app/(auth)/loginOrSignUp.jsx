@@ -19,8 +19,15 @@ import { INVALID_FORMAT_EMAIL } from '../../constants/validationMessage';
 import { router } from 'expo-router';
 import apiRoutes from '../../constants/apiRoutes';
 import Colors from '../../styles/Colors';
+import { useDispatch, useSelector } from 'react-redux';
+import generateOtpAction from '../../redux/actions/generateOtpAction';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import uiText from '../../constants/uiTexts';
 
 const LoginOrSignUp = () => {
+  const generateOtp = useSelector((state) => state.generateOtpReducer.data);
+  console.log(generateOtp, 'generateOtp')
+  const dispatch = useDispatch();
   const [email, setEmail] = useState({
     value: '',
     isValid: false,
@@ -49,7 +56,18 @@ const LoginOrSignUp = () => {
   };
 
   const handleNextClick = () => {
-    router.navigate(apiRoutes.otp);
+    if (!email.isValid) return;
+    dispatch(generateOtpAction({
+      queryParams: { email: email.value?.toLocaleLowerCase()}
+    })).unwrap()
+    .then(() => {
+      Toast.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: 'Success',
+        textBody: uiText.OTP_SEND_SUCCESS,
+        })
+    router.navigate(apiRoutes.otp)
+    })
   };
 
   return (
@@ -79,7 +97,7 @@ const LoginOrSignUp = () => {
                 type="email"
               />
             </View>
-            <View style={{ marginBottom: Platform.OS === 'ios' ? 20 : 0 }} />
+            {/* <View style={{ marginBottom: Platform.OS === 'ios' ? 20 : 0 }} /> */}
           </View>
         </ScrollView>
         <View style={loginOrSignupStyles.buttonWrapper}>
