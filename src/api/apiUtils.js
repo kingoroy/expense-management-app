@@ -1,9 +1,9 @@
 import axios from 'axios';
-import getStorage, { getRefreshToken } from '../utils/storage';
-import { ACCESS_TOKEN } from '../utils/storageKeys';
+import { ACCESS_TOKEN, REFRESH_TOKEN, REFRESH_TOKEN_EXPIRY_TIME } from '../utils/storageKeys';
 import uApi from './unauthApi';
 import api from './api';
-
+import * as db from '../utils/database';
+// import useDeviceId from '../hooks/useDeviceId';
 
 export const buildQueryString = (params) => {
   return params && Object.keys(params).length > 0
@@ -37,20 +37,17 @@ export const unAuthfetchData = async (endpoint, queryParams={}) => {
   }
 };
 
-export const postData = async (endpoint, data) => {
+export const sendData = async ({endpoint, body = {}, pathParams = '', queryParams = {}, headers = {}, method='post'}) => {
   try {
-    const response = await api.post(endpoint, data);
-    return response.data;
-  } catch (error) {
-    console.error('Error posting data:', error.message);
-    throw error;
-  }
-};
+    if (pathParams) {
+      endpoint = `${endpoint}/${pathParams}`;
+    }
+    console.log(headers, 'headers')
+    const response = await api[method](endpoint, body, {
+      params: queryParams,
+      headers: headers,
+    });
 
-export const unAuthPostData = async (endpoint, data) => {
-  try {
-    console.log('hello')
-    const response = await uApi.post(endpoint, data);
     return response?.data;
   } catch (error) {
     console.error('Error posting data:', error?.message);
@@ -58,17 +55,44 @@ export const unAuthPostData = async (endpoint, data) => {
   }
 };
 
-export const refreshToken = async () => {
-  const refreshToken = await getRefreshToken()
+export const unAuthsendData = async ({endpoint, body = {}, pathParams = '', queryParams = {}, headers = {}}) => {
   try {
-    const response = await axios.post(`${BASE_URL}/refresh-token`, {
-      refresh_token: refreshToken,
+    if (pathParams) {
+      endpoint = `${endpoint}/${pathParams}`;
+    }
+    console.log(headers, 'headers')
+    const response = await uApi.post(endpoint, body, {
+      params: queryParams,
+      headers: headers,
     });
-    const { access_token } = response.data; // Assuming the backend returns the new JWT
-    await getStorage().setItem(ACCESS_TOKEN, access_token) // Store new JWT
-    return access_token;
+
+    return response?.data;
+  } catch (error) {
+    console.error('Error posting data:', error?.message);
+    throw error;
+  }
+};
+
+
+export const refreshToken = async (deviceId) => {
+  const refreshToken = await db.getAuthData(REFRESH_TOKEN);
+  try {
+    console.log('hello')
+    const response = await axios.post(`${BASE_URL}/refresh-token?token=${refreshToken}`,
+      {},
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'device-id': deviceId
+        },
+      }
+    );
+    const { jwtToken, refreshTokenExpiryTime } = response?.data?.data; // Assuming the backend returns the new JWT
+    await db.updateAuthField(ACCESS_TOKEN, jwtToken);
+    await db.updateAuthField(REFRESH_TOKEN_EXPIRY_TIME, refreshTokenExpiryTime);
+    return jwtToken;
   } catch (error) {
     console.error('Error refreshing token:', error.message);
     throw error; // Handle error appropriately
   }
-};
+}

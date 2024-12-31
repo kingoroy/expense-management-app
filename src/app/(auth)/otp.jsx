@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { otpStyles } from '../../styles/stylesOtp';
 import { Ionicons } from '@expo/vector-icons';
 import Colors from '../../styles/Colors';
@@ -17,30 +17,55 @@ import generateOtpAction from '../../redux/actions/generateOtpAction';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ACCESS_TOKEN } from '../../utils/storageKeys';
+import useDeviceId from '../../hooks/useDeviceId';
+import apiRoutes from '../../constants/apiRoutes';
+import KshirsaLoading from '../../small-components/KshirsaLoading';
 
 const MAX_ATTEMPTS = 3;
 
 const Otp =  () => {
   const dispatch = useDispatch();
   const email = useSelector((state) => state.generateOtpReducer.data?.email);
-
+  const generateOtpLoading = useSelector((state) => state.generateOtpReducer.loading);
+  const {data, loading, error, success } = useSelector((state) => state.validateOtpReducer);
+  const deviceId = useDeviceId();
   const [attempts, setAttempts] = useState(0); 
   const [timerDuration, setTimerDuration] = useState(30);
   const countDown = useCountdownTimer(timerDuration);
 
+  useEffect(() => {
+    if (success && data) {
+      if (data?.isSignUpFlowCompleted) {
+      router.replace(apiRoutes.main);
+      } else {
+        router.replace(apiRoutes.registration);
+    } 
+  }
+  if (error?.errorCode === 701) {
+    console.log('inside error')
+    Toast.show({
+      type: ALERT_TYPE.DANGER,
+      title: 'Error',
+      textBody: error?.errorMessage || uiText.OTP_VALIDATION_FAILED,
+    });
+  }
+  }, [data, loading, error, success])
+  
   const handleOtpComplete = (otp) => {
     const body = {
       email,
       otp,
     };
-    dispatch(validateOtpAction({ body })).unwrap()
+    const headers= {
+      'device-id': deviceId,
+    }
+    dispatch(validateOtpAction({ body, headers})).unwrap()
 	  .then((res) => {
 		Toast.show({
 			type: ALERT_TYPE.SUCCESS,
 			title: 'Success',
 			textBody: uiText.LOGIN_SUCCESS,
 		  })
-      console.log(res, 'res') // eslint-disable-line
 	  })
 	  .catch(() => {
     })
@@ -100,6 +125,7 @@ const Otp =  () => {
             </Text>
           )}
         </View>
+        {(loading || generateOtpLoading) && <KshirsaLoading />}
       </SafeAreaView>
     </UseTouchableWithoutFeedback>
   );

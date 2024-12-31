@@ -1,4 +1,4 @@
 export const REFRESH_TOKEN = 'refreshToken';
-export const ACCESS_TOKEN = 'accessToken';
-export const IS_SIGNUPFLOW_COMPLETE = 'isSignupFlowComplete';
-export const REFRESH_TOKEN_EXPIRY_TIME = 'refreshTokenExpiryTime';
+export const ACCESS_TOKEN = 'jwtToken';
+export const IS_SIGNUPFLOW_COMPLETE = 'isSignUpFlowCompleted';
+export const REFRESH_TOKEN_EXPIRY_TIME = 'refreshTokenExpirationTime';

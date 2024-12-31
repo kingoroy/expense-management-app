@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -22,9 +22,18 @@ import CountryPicker from 'react-native-country-picker-modal'
 import { AntDesign } from '@expo/vector-icons';
 import Colors from '../../styles/Colors';
 import { EMPTY_DOB, EMPTY_NAME, EMPTY_PHONE_NUMBER, INVALID_FORMAT_PHONE_NUMBER } from '../../constants/validationMessage';
+import {KshirsaAlert} from '../../small-components/KshirsaAlert';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateUserDetailsAction } from '../../redux/actions/userDetailsAction';
+import  KshirsaLoadingScreen  from '../../small-components/KshirsaLoading';
+import apiRoutes from '../../constants/apiRoutes';
+import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 const RegisterForm = () => {
+  const {updateUserDetailsLoading} = useSelector((state) => state.userDetailsReducer);
+  const router = useRouter()
   const [step, setStep] = useState(1);
+  const dispatch = useDispatch();
   const [visibleCountryPicker, setVisibleCountryPicker] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState('India');
   const [selectedCountryCode, setSelectedCountryCode] = useState('+91');
@@ -49,6 +58,7 @@ const RegisterForm = () => {
       Keyboard.dismiss()
     }
   },[step])
+
   const handleChange = (name, value) => {
     switch (name) {
       case 'fullName':
@@ -82,12 +92,12 @@ const RegisterForm = () => {
         setStep((prevStep) => prevStep - 1);
         return true;
       } else {
-        Alert.alert(
+        KshirsaAlert.alert(
           'Exit Registration',
           'Are you sure you want to exit the registration process?',
           [
             { text: 'Cancel', style: 'cancel' },
-            { text: 'Exit', onPress: () => router.replace('/(auth)') },
+            { text: 'Exit', onPress: () => BackHandler.exitApp() },
           ]
         );
         return true;
@@ -147,6 +157,24 @@ const RegisterForm = () => {
             ...dateOfBirth,
             isValid: true,
             errorMessage: ''
+          })
+          const body = {
+            name: fullName.value,
+            phoneNumber: phoneNumber.value,
+            dob: dateOfBirth.value,
+            country: selectedCountry,
+            countryCode: selectedCountryCode
+          }
+          dispatch(updateUserDetailsAction(body)).unwrap()
+          .then((res)=> {
+            Dialog.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: 'Welcome to Kshirsa!',
+              textBody: 'Start tracking your expenses effortlessly and take control of your finances today.',
+              onClose: () => router.replace(apiRoutes.main)
+            })
+
+            router.replace(apiRoutes.main)
           })
         }
         break;
@@ -237,6 +265,7 @@ const RegisterForm = () => {
   return (
     <UseTouchableWithoutFeedback>
       <SafeAreaView style={registrationStyles.container}>
+      {updateUserDetailsLoading && <KshirsaLoadingScreen />}
         <StepIndicator
           currentStep={step}
           totalSteps={3}

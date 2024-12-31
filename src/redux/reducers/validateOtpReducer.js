@@ -1,14 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { RESET_VALIDATE_OTP, VALIDATE_OTP } from "../actions/types";
 import validateOtpAction from "../actions/validateOtpAction";
-import  getStorage  from "../../utils/storage";
-import { ACCESS_TOKEN, IS_SIGNUPFLOW_COMPLETE, REFRESH_TOKEN, REFRESH_TOKEN_EXPIRY_TIME } from "../../utils/storageKeys";
+import { saveAuthData } from "../../utils/database";
 
-const storage = getStorage()
 const initialState = {
     data: null,
     loading: false,
     error: null,
+    success: null,
     message: null,
   };
   
@@ -20,6 +19,7 @@ const initialState = {
         state.data = null;
         state.loading = false;
         state.error = null;
+        state.success = null;
      }
     },
     extraReducers: (builder) => {
@@ -30,18 +30,24 @@ const initialState = {
         })
         .addCase(validateOtpAction.fulfilled, (state, action) => {
             const { data, success, message } = action.payload;
+            const saveStorage = {
+                jwtToken: data?.accessToken,
+                refreshToken: data?.refreshToken,
+                isSignUpFlowCompleted: data?.isSignUpFlowCompleted,
+                refreshTokenExpirationTime: data?.refreshTokenExpirationTime
+            }
             state.loading = false;
             state.data = data;
             state.success = success;
             state.message = message;
-            storage.setItem(ACCESS_TOKEN, data?.accessToken);
-            storage.setItem(REFRESH_TOKEN, data?.refreshToken);
-            storage.setItem(IS_SIGNUPFLOW_COMPLETE, data?.isSignupFlowCompleted);
-            storage.setItem(REFRESH_TOKEN_EXPIRY_TIME, data?.refreshTokenExpirationTime);
+            saveAuthData(saveStorage)
         })
         .addCase(validateOtpAction.rejected, (state, action) => {
+        const { errorDetails, success, message } = action.payload
+          state.success = success || false;
           state.loading = false;
-          state.error = action.payload;
+          state.error = errorDetails;
+          state.message = message;
         })
     },
   });

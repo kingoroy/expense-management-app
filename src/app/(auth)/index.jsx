@@ -1,5 +1,5 @@
 import { Image, SafeAreaView, Text, TextInput, View } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { GetStartedScreenStyles } from '../../styles/StylesGetStartedScreen'
 import Colors from '../../styles/Colors'
 import KshirsaButton from '../../small-components/KshirsaButton'
@@ -7,10 +7,19 @@ import { useRouter } from 'expo-router'
 import apiRoutes from '../../constants/apiRoutes'
 import imagePath from '../../constants/imagePath'
 import logoStyles from '../../styles/logoStyles'
+import { deleteAuthRow, getAllAuthData, saveAuthData } from '../../utils/database'
 
 
 const GetStartedScreen = () => {
   const router = useRouter()
+  // useEffect(() => {
+  //   async function tokenCheck() {
+  //     const allData = await getAllAuthData();
+  //     console.log(allData, 'all data')
+  //   }
+  //    deleteAuthRow();
+  //   tokenCheck();
+  // }, [])
   const handleGetStarted =()=> {
     router.push(apiRoutes.loginOrSignup)
   }

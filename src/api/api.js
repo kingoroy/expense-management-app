@@ -1,7 +1,11 @@
 import axios from 'axios';
 // import { DEV_API_BASE_URL, PROD_API_BASE_URL } from '@env';
 import { Platform } from 'react-native';
-import { getToken, getTokenSync, refreshToken } from '../utils/storage';
+import { getAuthData } from '../utils/database';
+import { ACCESS_TOKEN } from '../utils/storageKeys';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import { refreshToken } from './apiUtils';
+import uiText from '../constants/uiTexts';
 
 // export const getBaseUrl = () => {
 //   if (__DEV__) {
@@ -19,28 +23,30 @@ const api = axios.create({
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${getTokenSync()}`
+    'Authorization': `Bearer ${getAuthData(ACCESS_TOKEN)}`,
   },
 });
 
+export const setupInterceptors = (router, deviceId) => {
 
 api.interceptors.request.use(
     async (config) => {
-      console.log('inside')
-      const token = await getToken();
+      const token = await getAuthData(ACCESS_TOKEN);
         if (token) {
-          const decodedToken = JSON.parse(atob(token.split('.')[1]));
-          const isTokenExpired = decodedToken.exp * 1000 < Date.now(); // Check if expired
+          const decodedToken = JSON.parse(atob(token?.split('.')[1]));
+          const isTokenExpired = decodedToken?.exp * 1000 < Date.now(); // Check if expired
   
           if (isTokenExpired) {
-            const newToken = await refreshToken(); // Refresh token
+            const newToken = await refreshToken(deviceId); // Refresh token
             config.headers['Authorization'] = `Bearer ${newToken}`; // Set new JWT in headers
           } else {
             config.headers['Authorization'] = `Bearer ${token}`; // Use existing JWT
           }
-        }      
+        }  
+        config.headers['device-id'] = deviceId;    
       return config;
     },(error) => {
+      console.log('error from req:', error)
         return Promise.reject(error);
       }
     );
@@ -49,7 +55,24 @@ api.interceptors.request.use(
       console.log('Response:', response?.data);
       return response;
   }, error => {
-      console.log('Response Error:', error?.response?.data);
+    router.replace('/(auth)/loginOrSignUp');  
+    Toast.show({
+      type: ALERT_TYPE.SUCCESS,
+      title: 'Success',
+      textBody: uiText.LOGIN_SUCCESS,
+    })
+    const errorDetails = error?.response?.data?.errorDetails;
+    console.log('Response Error:', error);
+      if (errorDetails?.errorCode?.startsWith(6)) {
+        Toast.show({
+          type: 'error',
+          title: 'Session Expired',
+          message: 'Your session has expired. Please login again.',
+          autoHide: true,
+          duration: 3000,
+        });
+      }
       return Promise.reject(error);
   });
+}
 export default api;
