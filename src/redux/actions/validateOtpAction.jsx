@@ -1,17 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { VALIDATE_OTP } from "./types";
-import { unAuthPostData } from "../../api/apiUtils";
+import { unAuthsendData } from "../../api/apiUtils";
 import urls from "../../api/url";
 
 const validateOtpAction = createAsyncThunk(
     VALIDATE_OTP,
-    async ({body}, { rejectWithValue }) => {
+    async ({headers, body}, { rejectWithValue }) => {
         try {
-          const response = await unAuthPostData(urls.validateOtp, body); 
+          const response = await unAuthsendData({
+           endpoint: urls.validateOtp,
+           body: body,
+           headers: headers,
+          }); 
           return response;
         } catch (error) {
-          console.error('Error fetching example data:', error.message);
-          return rejectWithValue(error.response?.data || error.message); 
+          console.error('Error fetching example data:', error?.response?.data);
+          return rejectWithValue(error?.response?.data || error?.message); 
         }
       }
 )

@@ -7,7 +7,7 @@ export default loginOrSignupStyles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         backgroundColor: Colors.moodyBlack,
-        paddingTop: 160,
+        paddingTop: 100,
         paddingBottom: 40,
         paddingHorizontal: 40,
         gap:80

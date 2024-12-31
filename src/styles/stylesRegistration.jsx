@@ -18,7 +18,7 @@ body: {
 
 },
 stepContainer: {
-    paddingTop: 100,
+    paddingTop: 40,
     justifyContent: 'center',
      alignItems: 'center',
     },

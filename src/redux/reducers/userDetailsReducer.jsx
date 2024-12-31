@@ -8,7 +8,7 @@ const initialState = {
   error: null,
   success: false,
   message: null,
-  userApiHappen: false,
+  updateUserDetailsLoading: false,
 };
 
 const userDetailsReducer = createSlice({
@@ -29,7 +29,6 @@ const userDetailsReducer = createSlice({
         state.data = data;
         state.success = success;
         state.message = message;
-        state.userApiHappen = true;
       })
       .addCase(getUserDetailsAction.rejected, (state, action) => {
         const { errorDetails, success, message } = action.payload
@@ -37,24 +36,23 @@ const userDetailsReducer = createSlice({
         state.error = errorDetails;
         state.success = success || false;
         state.message = message;
-        state.userApiHappen = true;
       })
       .addCase(updateUserDetailsAction.pending, (state) => {
-        state.loading = true;
+        state.updateUserDetailsLoading = true;
         state.error = null;
         state.success = false;
         state.message = null;
       })
       .addCase(updateUserDetailsAction.fulfilled, (state, action) => {
         const { data, success, message } = action.payload;
-        state.loading = false;
+        state.updateUserDetailsLoading = false;
         state.data = data;
         state.success = success;
         state.message = message;
       })
       .addCase(updateUserDetailsAction.rejected, (state, action) => {
         const { errorDetails, success, message } = action.payload
-        state.loading = false;
+        state.updateUserDetailsLoading = false;
         state.error = errorDetails;
         state.success = success || false;
         state.message = message;

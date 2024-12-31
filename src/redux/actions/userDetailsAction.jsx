@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { GET_USER_DETAILS, UPDATE_USER_DETAILS } from "./types";
-import { fetchData } from "../../api/apiUtils";
+import { fetchData, sendData } from "../../api/apiUtils";
 import urls from "../../api/url";
 
 const getUserDetailsAction = createAsyncThunk(
@@ -10,6 +10,7 @@ const getUserDetailsAction = createAsyncThunk(
           const response = await fetchData(urls.getUserDetails); 
           return response;
         } catch (error) {
+          console.log(error, 'error from user details')
           return rejectWithValue(error?.response?.data); 
         }
       }
@@ -17,9 +18,14 @@ const getUserDetailsAction = createAsyncThunk(
 
 export const updateUserDetailsAction = createAsyncThunk(
     UPDATE_USER_DETAILS,
-    async (_, { rejectWithValue }) => {
+    async ({body}, { rejectWithValue }) => {
         try {
-          const response = await unAuthfetchData(urls.generateOtp); 
+          const response = await sendData({
+            endpoint: urls.updateUserDetails,
+            body,
+            method: 'put',
+
+          }); 
           return response;
         } catch (error) {
           return rejectWithValue(error.response?.data || error.message); 

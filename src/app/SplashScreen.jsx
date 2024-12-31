@@ -1,54 +1,63 @@
-import React, { useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, StyleSheet, Animated, Text, Image } from 'react-native';
+import imagePath from '../constants/imagePath';
 import Colors from '../styles/Colors';
-import { getToken, getTokenSync } from '../utils/storage';
-import { useDispatch, useSelector } from 'react-redux';
-import getUserDetailsAction from '../redux/actions/userDetailsAction';
-import { errorCodes } from '../constants/utils';
 
-const SplashScreen = ({existToken, setIsLogged, setIsAppReady}) => {
-    const dispatch = useDispatch();
-    console.log(existToken, 'token')
+const SplashScreen = () => {
+  const logoScale = useRef(new Animated.Value(0)).current; // For scaling the logo
+  const textOpacity = useRef(new Animated.Value(0)).current; // For fading in the text
 
-    useEffect(() => {
-      if (existToken) {
-        dispatch(getUserDetailsAction()).unwrap()
-        .then(() => {
-          setIsLogged(true)
-          setIsAppReady(true)
-        }).catch((error) => {
-          const errorcode = error?.errorDetails?.errorCode
-          if(errorcode === errorCodes.jwtExpired || errorcode === errorCodes.jwtMissing) {
-            setIsLogged(false)
-            setIsAppReady(true) 
-          }
-        })
-      } else {
-        setTimeout(() => {
-          setIsAppReady(true)
-        }, 3000);
-      }
-}, [existToken]);
+  useEffect(() => {
+    // Logo animation
+    Animated.sequence([
+      Animated.timing(logoScale, {
+        toValue: 1,
+        duration: 1500, // 1.5 seconds
+        useNativeDriver: true,
+      }),
+      // Text animation starts after the logo animation
+      Animated.timing(textOpacity, {
+        toValue: 1,
+        duration: 1000, // 1 second
+        useNativeDriver: true,
+      }),
+    ]).start();
+  }, []);
 
   return (
-    <View style={styles.splashContainer}>
-      <Text style={styles.splashText}>Welcome to MyApp</Text>
-      <ActivityIndicator size="large" color={Colors.primary} />
+    <View style={styles.container}>
+      {/* Logo Animation */}
+      <Animated.Image
+        source={imagePath.logoPath} // Replace with your logo file
+        style={[styles.logo, { transform: [{ scale: logoScale }] }]}
+        resizeMode="contain"
+      />
+
+      {/* Simple Text Animation */}
+      <Animated.Text style={[styles.text, { opacity: textOpacity }]}>
+        Kshirsa
+      </Animated.Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  splashContainer: {
+  container: {
     flex: 1,
+    backgroundColor: Colors.moodyBlack, // White background
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.moodyBlack,
   },
-  splashText: {
-    fontSize: 24,
-    color: Colors.white,
-    marginBottom: 20,
+  logo: {
+    width: 200, // Adjust size as needed
+    height: 200,
+    marginBottom: 10, // Space between logo and text
+  },
+  text: {
+    fontSize: 40, // Large text size
+    fontWeight: 'bold',
+    letterSpacing: 2, // Spacing between letters
+    color: Colors.secondary, // Text color
   },
 });
 
