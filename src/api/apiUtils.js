@@ -3,6 +3,7 @@ import { ACCESS_TOKEN, REFRESH_TOKEN, REFRESH_TOKEN_EXPIRY_TIME } from '../utils
 import uApi from './unauthApi';
 import api from './api';
 import * as db from '../utils/database';
+import { setStorageData } from '../utils/storage';
 // import useDeviceId from '../hooks/useDeviceId';
 
 export const buildQueryString = (params) => {
@@ -42,7 +43,7 @@ export const sendData = async ({endpoint, body = {}, pathParams = '', queryParam
     if (pathParams) {
       endpoint = `${endpoint}/${pathParams}`;
     }
-    console.log(headers, 'headers')
+    console.log(queryParams, 'headers')
     const response = await api[method](endpoint, body, {
       params: queryParams,
       headers: headers,
@@ -88,8 +89,10 @@ export const refreshToken = async (deviceId) => {
       }
     );
     const { jwtToken, refreshTokenExpiryTime } = response?.data?.data; // Assuming the backend returns the new JWT
-    await db.updateAuthField(ACCESS_TOKEN, jwtToken);
-    await db.updateAuthField(REFRESH_TOKEN_EXPIRY_TIME, refreshTokenExpiryTime);
+    // await db.updateAuthField(ACCESS_TOKEN, jwtToken);
+    // await db.updateAuthField(REFRESH_TOKEN_EXPIRY_TIME, refreshTokenExpiryTime);
+    setStorageData(ACCESS_TOKEN, jwtToken);
+    setStorageData(REFRESH_TOKEN_EXPIRY_TIME, refreshTokenExpiryTime);
     return jwtToken;
   } catch (error) {
     console.error('Error refreshing token:', error.message);

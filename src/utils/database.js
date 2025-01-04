@@ -18,7 +18,8 @@ export async function initializeDatabase() {
 
     // Ensure only one row exists
     await (await db).execAsync(`DELETE FROM AuthTable WHERE id != 1`);
-    console.log('Database initialized and single row ensured.');
+    const result = await (await db).execAsync(`SELECT * FROM AuthTable WHERE id = 1`);
+    console.log('Database initialized and single row ensured.', result?.[0]);
   } catch (error) {
     console.error('Database initialization error:', error);
   }

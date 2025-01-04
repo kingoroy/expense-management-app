@@ -34,8 +34,6 @@ const LoginOrSignUp = () => {
   const router = useRouter();
   const generateOtp = useSelector((state) => state.generateOtpReducer);
   const { data, loading, success, error } = generateOtp;
-
-  console.log(generateOtp, 'generateOtp')
   const dispatch = useDispatch();
   const [email, setEmail] = useState({
     value: '',

@@ -3,5 +3,6 @@ const urls = {
    validateOtp: '/api/v1/auth/otp/validate',
    getUserDetails: '/api/v1/my/get/details',
    updateUserDetails: '/api/v1/my/update/details',
+   logout: '/api/v1/auth/logout',
 }
 export default urls;

@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Keyboard,
   SafeAreaView,
+  TextInput,
 } from 'react-native';
 import registrationStyles from '../../styles/stylesRegistration';
 import KshirsaButton from '../../small-components/KshirsaButton';
@@ -28,6 +29,7 @@ import { updateUserDetailsAction } from '../../redux/actions/userDetailsAction';
 import  KshirsaLoadingScreen  from '../../small-components/KshirsaLoading';
 import apiRoutes from '../../constants/apiRoutes';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import KshirsaRadioButton from '../../small-components/KshirsaRadioButton';
 
 const RegisterForm = () => {
   const {updateUserDetailsLoading} = useSelector((state) => state.userDetailsReducer);
@@ -51,6 +53,10 @@ const RegisterForm = () => {
     value: '',
     isValid: false,
     errorMessage: ''
+  })
+
+  const [gender, setGender] = useState({
+    value: 'Male',
   })
 
   useEffect(()=> {
@@ -86,6 +92,11 @@ const RegisterForm = () => {
         break;
     }
   }
+
+  const handleOptionChange = (value) => {
+    setGender({value: value})
+  };
+
   useEffect(() => {
     const handleBackPress = () => {
       if (step > 1) {
@@ -163,15 +174,17 @@ const RegisterForm = () => {
             phoneNumber: phoneNumber.value,
             dob: dateOfBirth.value,
             country: selectedCountry,
-            countryCode: selectedCountryCode
+            countryCode: selectedCountryCode,
+            gender: gender.value
           }
           dispatch(updateUserDetailsAction(body)).unwrap()
           .then((res)=> {
             Dialog.show({
               type: ALERT_TYPE.SUCCESS,
-              title: 'Welcome to Kshirsa!',
+              title: `${res?.data?.userDetails?.name} Welcome to Kshirsa!`,
               textBody: 'Start tracking your expenses effortlessly and take control of your finances today.',
-              onClose: () => router.replace(apiRoutes.main)
+              button: 'Start!!',
+              // onClose: () => router.replace(apiRoutes.main)
             })
 
             router.replace(apiRoutes.main)
@@ -253,6 +266,14 @@ const RegisterForm = () => {
                 onChangeText={(value) => handleChange('dateOfBirth', value)}
                 isValid={dateOfBirth.isValid}
                 errorMessage={dateOfBirth.errorMessage}
+              />
+              <KshirsaRadioButton
+                options={['Male', 'Female', 'Other']}
+                selectedValue={gender.value}
+                onValueChange={handleOptionChange}
+                containerStyle={{ marginBottom: 20 }}
+                buttonStyle={{ marginRight: 15 }}
+                textStyle={{ fontSize: 18 }}
               />
             </View>
           </UseTouchableWithoutFeedback>

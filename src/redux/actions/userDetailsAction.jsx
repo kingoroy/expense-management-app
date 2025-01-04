@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { GET_USER_DETAILS, UPDATE_USER_DETAILS } from "./types";
+import { GET_USER_DETAILS, LOGOUT, UPDATE_USER_DETAILS } from "./types";
 import { fetchData, sendData } from "../../api/apiUtils";
 import urls from "../../api/url";
 
@@ -18,7 +18,7 @@ const getUserDetailsAction = createAsyncThunk(
 
 export const updateUserDetailsAction = createAsyncThunk(
     UPDATE_USER_DETAILS,
-    async ({body}, { rejectWithValue }) => {
+    async (body, { rejectWithValue }) => {
         try {
           const response = await sendData({
             endpoint: urls.updateUserDetails,
@@ -31,6 +31,22 @@ export const updateUserDetailsAction = createAsyncThunk(
           return rejectWithValue(error.response?.data || error.message); 
         }
       }
+)
+
+export const logoutAction = createAsyncThunk(
+  LOGOUT,
+  async (queryParams, { rejectWithValue }) => {
+      try {
+        const response = await sendData({
+          endpoint: urls.logout,
+          queryParams,
+          method: 'post',
+        }); 
+        return response;
+      } catch (error) {
+        return rejectWithValue(error.response?.data || error.message); 
+      }
+    }
 )
 
 export default getUserDetailsAction;

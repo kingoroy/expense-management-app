@@ -42,7 +42,6 @@ const Otp =  () => {
     } 
   }
   if (error?.errorCode === 701) {
-    console.log('inside error')
     Toast.show({
       type: ALERT_TYPE.DANGER,
       title: 'Error',
