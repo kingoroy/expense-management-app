@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RESET_VALIDATE_OTP, VALIDATE_OTP } from "../actions/types";
 import validateOtpAction from "../actions/validateOtpAction";
 import { saveAuthData } from "../../utils/database";
+import { setAuthTokens } from "../../utils/storage";
 
 const initialState = {
     data: null,
@@ -40,7 +41,7 @@ const initialState = {
             state.data = data;
             state.success = success;
             state.message = message;
-            saveAuthData(saveStorage)
+           setAuthTokens(saveStorage);
         })
         .addCase(validateOtpAction.rejected, (state, action) => {
         const { errorDetails, success, message } = action.payload

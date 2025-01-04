@@ -3,7 +3,7 @@ import { Redirect, Slot, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import SplashScreen from "./SplashScreen";
 import AppProvider from ".";
-import { getAuthData, initializeDatabase } from "../utils/database";
+import { getAllAuthData, getAuthData, initializeDatabase } from "../utils/database";
 import { ACCESS_TOKEN } from "../utils/storageKeys";
 import { Provider } from "react-redux";
 import KshirsaStore from "../redux/store";
@@ -19,7 +19,14 @@ export default function RootLayout() {
   const deviceId = useDeviceId()
   useEffect(() => {
     // Initialize SQLite database
-    initializeDatabase();
+     initializeDatabase();
+
+  }, []);
+
+  useEffect(() => {
+   setTimeout(() => {
+    getAllAuthData()
+   }, 4000);
   }, []);
 
   useEffect(() => {

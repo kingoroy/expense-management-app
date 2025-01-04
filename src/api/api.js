@@ -6,6 +6,7 @@ import { ACCESS_TOKEN } from '../utils/storageKeys';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { refreshToken } from './apiUtils';
 import uiText from '../constants/uiTexts';
+import { clearAuthTokens, getStorageData } from '../utils/storage';
 
 // export const getBaseUrl = () => {
 //   if (__DEV__) {
@@ -23,7 +24,6 @@ const api = axios.create({
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${getAuthData(ACCESS_TOKEN)}`,
   },
 });
 
@@ -31,7 +31,7 @@ export const setupInterceptors = (router, deviceId) => {
 
 api.interceptors.request.use(
     async (config) => {
-      const token = await getAuthData(ACCESS_TOKEN);
+      const token = await getStorageData(ACCESS_TOKEN);
         if (token) {
           const decodedToken = JSON.parse(atob(token?.split('.')[1]));
           const isTokenExpired = decodedToken?.exp * 1000 < Date.now(); // Check if expired
@@ -64,6 +64,7 @@ api.interceptors.request.use(
     const errorDetails = error?.response?.data?.errorDetails;
     console.log('Response Error:', error);
       if (errorDetails?.errorCode?.startsWith(6)) {
+        clearAuthTokens()
         Toast.show({
           type: 'error',
           title: 'Session Expired',

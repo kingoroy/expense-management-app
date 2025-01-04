@@ -8,6 +8,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { errorCodes } from '../constants/utils';
 import SplashScreen from './SplashScreen';
 import apiRoutes from '../constants/apiRoutes';
+import { getStorageData } from '../utils/storage';
 
 export default  function  Index() {
   const userDetails = useSelector((state) => state.userDetailsReducer?.data);
@@ -16,7 +17,8 @@ export default  function  Index() {
 
   useEffect(() => {
     const initializeApp = async () => {
-      const existToken = await getAuthData(ACCESS_TOKEN);
+      const existToken = await getStorageData(ACCESS_TOKEN);
+      console.log(existToken, 'existToken')
       // Check network status
       const networkState = await NetInfo.fetch();
       if (networkState.isConnected) {
@@ -34,7 +36,6 @@ export default  function  Index() {
               }, 3000);
             })
             .catch((error) => {
-              console.log(error, 'error from index')
               const errorcode = error?.errorDetails?.errorCode;
               // if (
               //   errorcode === errorCodes.jwtExpired ||
