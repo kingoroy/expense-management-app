@@ -11,4 +11,10 @@ export default {
     normalInputBg: 'rgb(85, 85, 85)',
     infoBlue: 'rgb(0, 122, 255)',
     errorInputBg: 'rgba(189, 59, 59, 0.66)',
+    errorText: '#ff0000',
+    black: 'black',
+    lightGrey: '#D0E5E4',
+    darkGrey: 'darkgrey',
+    primaryText:'rgb(108, 108, 107)',
+    redOverlay: '#ffe6e6',
 }

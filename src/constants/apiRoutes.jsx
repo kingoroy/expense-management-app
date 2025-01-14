@@ -2,6 +2,6 @@ export default apiRoutes = {
     auth: '/(auth)',
     loginOrSignup: '/loginOrSignUp',
     otp: '/otp',
-    main: '/(main)',
+    main: '/HomeScreen',
     registration: '/(main)/registration',
 } 
