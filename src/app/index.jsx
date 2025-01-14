@@ -18,7 +18,6 @@ export default  function  Index() {
   useEffect(() => {
     const initializeApp = async () => {
       const existToken = await getStorageData(ACCESS_TOKEN);
-      console.log(existToken, 'existToken')
       // Check network status
       const networkState = await NetInfo.fetch();
       if (networkState.isConnected) {
@@ -37,29 +36,19 @@ export default  function  Index() {
             })
             .catch((error) => {
               const errorcode = error?.errorDetails?.errorCode;
-              // if (
-              //   errorcode === errorCodes.jwtExpired ||
-              //   errorcode === errorCodes.jwtMissing
-              // )
-              //  {
                 setInitialRoute(apiRoutes.auth);
-              // }
             })
         } else {
-          // If connected but no token, go to auth flow
           setTimeout(() => {
             setInitialRoute(apiRoutes.auth);
           }, 3000);
         }
       } else {
-        // If no network
         if (existToken) {
-          // Token exists, proceed to home
           setTimeout(() => {
             setInitialRoute(apiRoutes.main);
           }, 3000);
         } else {
-          // No token, show no internet page
           setTimeout(() => {
             setInitialRoute(apiRoutes.auth);
           }, 3000);
