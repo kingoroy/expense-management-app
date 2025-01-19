@@ -3,53 +3,46 @@ import React, { useRef, useState } from 'react';
 import balanceSummaryCardStyles from '../../styles/stylesBalanceSummaryCard';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import Colors from '../../styles/Colors';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const BalanceSummaryCard = () => {
-  const [isSticky, setIsSticky] = useState(false);
-  const cardPosition = useRef(null);
+  // const [isSticky, setIsSticky] = useState(false);
+  // const cardPosition = useRef(null);
 
-  const handleScroll = (event) => {
-    const scrollY = event.nativeEvent.contentOffset.y;
-    if (cardPosition.current) {
-      const cardTop = cardPosition.current.y; // Position of the card
-      if (scrollY >= cardTop && !isSticky) {
-        setIsSticky(true);
-      } else if (scrollY < cardTop && isSticky) {
-        setIsSticky(false);
-      }
-    }
-  };
+  // const handleScroll = (event) => {
+  //   const scrollY = event.nativeEvent.contentOffset.y;
+  //   if (cardPosition.current) {
+  //     const cardTop = cardPosition.current.y; // Position of the card
+  //     if (scrollY >= cardTop && !isSticky) {
+  //       setIsSticky(true);
+  //     } else if (scrollY < cardTop && isSticky) {
+  //       setIsSticky(false);
+  //     }
+  //   }
+  // };
 
   return (
-    <ScrollView
-      onScroll={handleScroll}
-      scrollEventThrottle={16} // Ensures smooth scroll detection
-    >
-      {/* Sticky UI */}
-      {isSticky && (
-        <View style={balanceSummaryCardStyles.stickyContainer}>
-          <Text style={balanceSummaryCardStyles.stickyText}>Sticky Balance Summary</Text>
-          <AntDesign name="downcircleo" size={20} color={Colors.primaryText} />
-        </View>
-      )}
-
+    <>
       {/* Original UI */}
-      <View
-        onLayout={(event) => {
-          cardPosition.current = event.nativeEvent.layout;
-        }}
+      <LinearGradient
+        colors={['#002200', Colors.primary, '#002200']} // Subtle gradient colors
+        start={{ x: 0, y: 0.5 }} // Top-left
+        end={{ x: 1, y: 0.5 }}   // Bottom-left
+        // style={styles.card}
         style={balanceSummaryCardStyles.container}
       >
+      {/* <View
+      > */}
         <View style={balanceSummaryCardStyles.smallContainer}>
           <View>
             <Text style={balanceSummaryCardStyles.balanceTitle}>Total Balance</Text>
             <View style={balanceSummaryCardStyles.balanceTextWrapper}>
-              <FontAwesome name="rupee" size={30} color={Colors.primaryText} />
+              <FontAwesome name="rupee" size={30} color={Colors.lightGrey} />
               <Text style={balanceSummaryCardStyles.balanceText}>29231239</Text>
             </View>
           </View>
           <View style={balanceSummaryCardStyles.balanceDropdown}>
-            <Text>Month</Text>
+            <Text style={{fontWeight: 'bold'}}>Month</Text>
             <AntDesign name="downcircleo" size={20} color="black" />
           </View>
         </View>
@@ -80,8 +73,9 @@ const BalanceSummaryCard = () => {
             </View>
           </View>
         </View>
-      </View>
-    </ScrollView>
+      {/* </View> */}
+      </LinearGradient>
+    </>
   );
 };
 

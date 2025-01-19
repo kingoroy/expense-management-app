@@ -3,6 +3,7 @@ import fontsSlice from "./reducers/fontReducer";
 import validateOtpReducer from "./reducers/validateOtpReducer";
 import generateOtpReducer from "./reducers/generateOtpReducer";
 import userDetailsReducer from "./reducers/userDetailsReducer";
+import floatingButtonReducer from "./reducers/floatingBtnReducer";
 
 const KshirsaStore = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const KshirsaStore = configureStore({
       generateOtpReducer: generateOtpReducer,
       validateOtpReducer: validateOtpReducer,
       userDetailsReducer: userDetailsReducer,
+      floatingButtonReducer: floatingButtonReducer,
     },
   });
 

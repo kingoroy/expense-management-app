@@ -17,4 +17,6 @@ export default {
     darkGrey: 'darkgrey',
     primaryText:'rgb(108, 108, 107)',
     redOverlay: '#ffe6e6',
+    tabbaroverlay: 'rgba(27, 27, 27, 0.9)',
+    transparent: 'rgba(255, 255, 255, 0)',
 }

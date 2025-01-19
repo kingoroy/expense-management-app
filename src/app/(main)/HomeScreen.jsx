@@ -11,9 +11,10 @@ const MainHomeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: Colors.moodyBlack, position: 'relative' }}>
       <ScrollView 
-        stickyHeaderIndices={[2]} // Index of the sticky header in the children array
-        scrollEnabled={true}
-        showsVerticalScrollIndicator={false}>
+        // stickyHeaderIndices={[2]} // Index of the sticky header in the children array
+        // scrollEnabled={true}
+        showsVerticalScrollIndicator={false}
+        >
       <KshirsaTopBackground />
       <WelcomeUserHome />
       <View style={{ alignItems: 'center' }}>
