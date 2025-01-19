@@ -1,16 +1,26 @@
 import { StyleSheet } from "react-native";
 import Colors from "./Colors";
 import cssUtils from "../constants/cssUtils";
+import { cardShadowStyles } from "./mixtureStyles";
 
 const balanceSummaryCardStyles = StyleSheet.create({
     container: {
-       backgroundColor: Colors.secondary,
+    //    backgroundColor: Colors.primaryText,
        height: 200,
         width: 350,
         borderRadius: 20,
-        padding: 20, borderColor: Colors.lightGrey,
-        borderWidth: 1,
+        padding: 20, 
+        // borderColor: Colors.lightGrey,
+        // borderWidth: 1,
         justifyContent: 'space-between',
+        // ...cardShadowStyles
+    },
+    shadow: {
+        shadowColor: 'black',
+        shadowOffset: {width: -2, height: 4},
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+        elevation: 5,
     },
     smallContainer: {
         flexDirection: 'row',
@@ -29,7 +39,7 @@ const balanceSummaryCardStyles = StyleSheet.create({
     balanceText: {
         fontSize: cssUtils.mediumBigTextSize,
         fontWeight: cssUtils.mediumBold,
-        color: Colors.primaryText,
+        color: Colors.white,
         paddingBottom: 5,
     },
     smallBalanceText: {
@@ -39,7 +49,7 @@ const balanceSummaryCardStyles = StyleSheet.create({
         paddingBottom: 5,
     },
     balanceTitle: {
-        color: Colors.primaryText,
+        color: Colors.darkGrey,
         fontSize: cssUtils.smallTextSize,
         fontWeight: cssUtils.bold,
     },
@@ -54,7 +64,7 @@ const balanceSummaryCardStyles = StyleSheet.create({
         backgroundColor: Colors.redOverlay,
     },
     smallBalanceTitle: {
-        color: Colors.primaryText,
+        color: Colors.darkGrey,
         fontSize: cssUtils.smallTextSize,
         fontWeight: cssUtils.bold,
     },

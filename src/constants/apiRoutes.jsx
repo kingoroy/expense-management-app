@@ -4,4 +4,5 @@ export default apiRoutes = {
     otp: '/otp',
     main: '/HomeScreen',
     registration: '/(main)/registration',
+    addTransaction: '/AddTransaction',
 } 
