@@ -1,3 +1,4 @@
+
 const uiText ={
     ENTER_OTP: 'Enter OTP Code',
     OTP_SENT: 'Code has been sent to',
@@ -13,6 +14,7 @@ const uiText ={
     LOGIN_SUCCESS: 'User logged in successfully',
     OTP_SEND_ERROR: `There's an error in sending OTP`,
     OTP_VALIDATION_FAILED: 'OTP is invalid or has expired. Please try again',
+    ADD_TRANSACTION_SUCCESS: 'Transaction added successfully',
     //input placeholders--------
     PHONE_NUMBER: 'Enter your phone number',
 }
