@@ -5,11 +5,11 @@ import cssUtils from '../constants/cssUtils'
 import { LinearGradient } from 'expo-linear-gradient'
 import Colors from '../styles/Colors'
 
-const KshirsaButton = ({ title = 'button', buttonStyle, titleStyle, onPress }) => {
+const KshirsaButton = ({ title = 'button', buttonStyle, titleStyle, onPress, icon={} }) => {
     return (
         <TouchableOpacity  onPress={onPress} activeOpacity={cssUtils.buttonOpacity}>
-            <LinearGradient colors={Colors.buttonLinearGradient} style={[kshirsaButtonStyles.container, buttonStyle, onPress]}>
-                <Text style={[kshirsaButtonStyles.text, titleStyle]}>{title}</Text>
+            <LinearGradient colors={Colors.buttonLinearGradient} style={[icon? kshirsaButtonStyles.iconContainer : kshirsaButtonStyles.container, buttonStyle, onPress]}>
+               {icon ? icon : <Text style={[kshirsaButtonStyles.text, titleStyle]}>{title}</Text>}
             </LinearGradient>
         </TouchableOpacity>
     )

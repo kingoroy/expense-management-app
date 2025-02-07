@@ -5,6 +5,7 @@ const cssUtils = {
     smallTextSize: 14,
     averageBigTextSize: 30,
     mediumBold: 800,
+    bigTextSize: 35,
     bold: 'bold',
 }
 

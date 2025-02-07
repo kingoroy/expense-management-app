@@ -104,9 +104,9 @@ const KshirsaInput = ({
         <DateTimePicker
           value={date}
           mode="date"
-          display="default"
           onChange={handleDateChange}
           maximumDate={new Date()}
+          display="spinner"
         />
       )}
     </View>

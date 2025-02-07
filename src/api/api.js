@@ -6,7 +6,8 @@ import { ACCESS_TOKEN } from '../utils/storageKeys';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { refreshToken } from './apiUtils';
 import uiText from '../constants/uiTexts';
-import { clearAuthTokens, getStorageData } from '../utils/storage';
+import { clearAuthTokens, getDeviceId, getStorageData } from '../utils/storage';
+import urls from './url';
 
 // export const getBaseUrl = () => {
 //   if (__DEV__) {
@@ -20,7 +21,7 @@ import { clearAuthTokens, getStorageData } from '../utils/storage';
 
 const api = axios.create({
   // baseURL: 'http://localhost:8500/kshirsa/',
-  baseURL: 'https://kshirsa-money-backend-dev.onrender.com/kshirsa',
+  baseURL: urls.baseUrl,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -32,21 +33,27 @@ export const setupInterceptors = (router, deviceId) => {
 api.interceptors.request.use(
     async (config) => {
       const token = await getStorageData(ACCESS_TOKEN);
+      const deviceIdFromStorage = await getDeviceId();
         if (token) {
           const decodedToken = JSON.parse(atob(token?.split('.')[1]));
           const isTokenExpired = decodedToken?.exp * 1000 < Date.now(); // Check if expired
-  
           if (isTokenExpired) {
-            const newToken = await refreshToken(deviceId); // Refresh token
+            const newToken = await refreshToken(deviceIdFromStorage); // Refresh token
             config.headers['Authorization'] = `Bearer ${newToken}`; // Set new JWT in headers
           } else {
             config.headers['Authorization'] = `Bearer ${token}`; // Use existing JWT
           }
         }  
-        config.headers['device-id'] = deviceId;    
+        config.headers['device-id'] = deviceId; 
+        console.log('Request Details:');
+        console.log('URL:', config.url);
+        console.log('Method:', config.method.toUpperCase());
+        console.log('Headers:', config.headers);
+        if (config.params) console.log('Params:', config.params);
+        if (config.data) console.log('Body:', config.data);   
       return config;
     },(error) => {
-      console.log('error from req:', error)
+      console.log('error from req:', error?.response?.data)
         return Promise.reject(error);
       }
     );
@@ -54,15 +61,17 @@ api.interceptors.request.use(
     api.interceptors.response.use(response => {
       console.log('Response:', response?.data);
       return response;
-  }, error => {
-    router.replace('/(auth)/loginOrSignUp');  
-    Toast.show({
-      type: ALERT_TYPE.SUCCESS,
-      title: 'Success',
-      textBody: uiText.LOGIN_SUCCESS,
-    })
+  }, 
+  error => {
+  //   router.replace('/(auth)/loginOrSignUp');  
+  //   Toast.show({
+  //     type: ALERT_TYPE.SUCCESS,
+  //     title: 'Success',
+  //     textBody: uiText.LOGIN_SUCCESS,
+    // }
+  // )
     const errorDetails = error?.response?.data?.errorDetails;
-    console.log('Response Error:', error);
+    console.log('Response Error:', error?.response?.data);
       if (errorDetails?.errorCode?.startsWith(6)) {
         clearAuthTokens()
         Toast.show({

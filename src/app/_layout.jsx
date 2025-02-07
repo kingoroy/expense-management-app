@@ -18,11 +18,13 @@ import apiRoutes from "../constants/apiRoutes";
 import { setButtonState } from "../redux/reducers/floatingBtnReducer";
 
 export default function RootLayout() {
+  console.log('from root layout')
   const router = useRouter();
   const pathname = usePathname();
   const deviceId = useDeviceId();
-  const visibleFloatingBtn = pathname !== "/login" && pathname !== "/register" && pathname !== '/';
-
+  // const visibleFloatingBtn = pathname !== "/login" && pathname !== "/register" && pathname !== '/';
+  const visibleFloatingBtn = pathname === apiRoutes.main;
+  console.log(deviceId, 'device')
   useEffect(() => {
     // Initialize SQLite database
      initializeDatabase();

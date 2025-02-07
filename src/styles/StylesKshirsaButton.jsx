@@ -14,6 +14,10 @@ const kshirsaButtonStyles = StyleSheet.create({
         color: Colors.white,
         fontSize: 20,
     },
+    iconContainer : {
+        padding: 20,
+        borderRadius: 50,
+    }
 })
 
 export default kshirsaButtonStyles

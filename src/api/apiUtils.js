@@ -3,7 +3,8 @@ import { ACCESS_TOKEN, REFRESH_TOKEN, REFRESH_TOKEN_EXPIRY_TIME } from '../utils
 import uApi from './unauthApi';
 import api from './api';
 import * as db from '../utils/database';
-import { setStorageData } from '../utils/storage';
+import { getStorageData, setStorageData } from '../utils/storage';
+import urls from './url';
 // import useDeviceId from '../hooks/useDeviceId';
 
 export const buildQueryString = (params) => {
@@ -76,26 +77,33 @@ export const unAuthsendData = async ({endpoint, body = {}, pathParams = '', quer
 
 
 export const refreshToken = async (deviceId) => {
-  const refreshToken = await db.getAuthData(REFRESH_TOKEN);
+  const refreshToken = await getStorageData(REFRESH_TOKEN)
+  console.log(deviceId, 'id from refresh');
+  console.log(refreshToken, 'refreshToken from refresh');
+  const url = `${urls.baseUrl}/api/v1/auth/refresh?token=${refreshToken}`;
+  const headers = {
+    'Content-Type': 'application/json',
+    'device-id': deviceId
+  };
+
+  console.log('Request Details:');
+  console.log('URL:', url);
+  console.log('Headers:', headers);
+
   try {
-    console.log('hello')
-    const response = await axios.post(`${BASE_URL}/refresh-token?token=${refreshToken}`,
-      {},
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'device-id': deviceId
-        },
-      }
-    );
+    console.log('Sending request...');
+    const response = await axios.get(url, { headers });
+
+    console.log('Response:', response);
+
     const { jwtToken, refreshTokenExpiryTime } = response?.data?.data; // Assuming the backend returns the new JWT
-    // await db.updateAuthField(ACCESS_TOKEN, jwtToken);
-    // await db.updateAuthField(REFRESH_TOKEN_EXPIRY_TIME, refreshTokenExpiryTime);
+
     setStorageData(ACCESS_TOKEN, jwtToken);
     setStorageData(REFRESH_TOKEN_EXPIRY_TIME, refreshTokenExpiryTime);
+
     return jwtToken;
   } catch (error) {
-    console.error('Error refreshing token:', error.message);
-    throw error; // Handle error appropriately
+    console.error('Error refreshing token:', error?.response?.data);
+    throw error;
   }
-}
+};
